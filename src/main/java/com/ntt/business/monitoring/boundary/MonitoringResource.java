@@ -17,6 +17,7 @@ public class MonitoringResource {
     @GET
     @Path("ping")
     public String ping(){
+        // test comment
         return "Alive - " + System.currentTimeMillis();
     }
 }
