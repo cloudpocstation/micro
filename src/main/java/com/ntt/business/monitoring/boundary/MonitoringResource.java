@@ -18,6 +18,6 @@ public class MonitoringResource {
     @Path("ping")
     public String ping(){
         // test comment
-        return "Alive awsome - " + System.currentTimeMillis();
+        return "Alive awsome and running - " + System.currentTimeMillis();
     }
 }
