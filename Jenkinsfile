@@ -33,6 +33,16 @@ pipeline {
           }
         }
       }
+      stage('Sonar Analysis') {
+        steps {
+          sh "echo running sonar"
+        }
+      }
+      stage('Integration Tests') {
+        steps {
+          sh "echo Running tests against the deployed application"
+        }
+      }
       stage('Build Release') {
         when {
           branch 'master'
