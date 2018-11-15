@@ -40,7 +40,7 @@ pipeline {
       }
       stage('Integration Tests') {
         steps {
-          sh "Running tests against the deployed application"
+          sh "echo Running tests against the deployed application"
         }
       }
       stage('Build Release') {
