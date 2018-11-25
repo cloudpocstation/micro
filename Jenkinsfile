@@ -43,6 +43,11 @@ pipeline {
           sh "echo Running tests against the deployed application"
         }
       }
+      stage('Kibana') {
+        steps {
+          sh "jx step report activities"
+        }
+      }
       stage('Build Release') {
         when {
           branch 'master'
