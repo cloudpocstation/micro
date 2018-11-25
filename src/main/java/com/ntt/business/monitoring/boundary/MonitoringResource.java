@@ -17,7 +17,6 @@ public class MonitoringResource {
     @GET
     @Path("ping")
     public String ping(){
-        // test comment
-        return "Alive - from devpod" + System.currentTimeMillis();
+        return "Alive" + System.currentTimeMillis();
     }
 }
