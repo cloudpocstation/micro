@@ -45,7 +45,9 @@ pipeline {
       }
       stage('Kibana') {
         steps {
-          sh "jx step report activities"
+          container('maven') {
+            sh "jx step report activities"
+          }
         }
       }
       stage('Build Release') {
