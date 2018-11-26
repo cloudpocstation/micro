@@ -17,6 +17,6 @@ public class MonitoringResource {
     @GET
     @Path("ping")
     public String ping(){
-        return "Alive" + System.currentTimeMillis();
+        return "Alive from dev pod" + System.currentTimeMillis();
     }
 }
