@@ -1,0 +1,1 @@
+skaffold run -p dev
