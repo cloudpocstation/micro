@@ -33,6 +33,6 @@ public class MonitoringResource {
     }
 
     private boolean randomBoolean() {
-        return new Random(System.currentTimeMillis()).nextBoolean();
+        return new Random().nextBoolean();
     }
 }
