@@ -18,7 +18,7 @@ stages {
         }
         steps {
           container('maven') {
-            sh "jx version -b"
+            sh "jx upgrade cli"
             sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
             sh "mvn install"
           }
@@ -28,7 +28,7 @@ stages {
       when { anyOf { branch 'master'; branch 'PR-*' } }
         steps {
             container('maven') {
-                sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME.com"
+                // sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME.com"
             }
         }
       }
