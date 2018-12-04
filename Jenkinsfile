@@ -70,8 +70,8 @@ stages {
         steps {
         dir ('./test') {
           container('maven') {
-            // sh "make wait-for-resource"
-            // sh "make test"
+            sh "make wait-for-resource"
+            sh "make test"
           }
         }
         }
@@ -86,8 +86,8 @@ stages {
               steps {
               dir ('./test') {
                 container('maven') {
-                  // sh "make wait-for-resource"
-                  // sh "make it-test"
+                  sh "make wait-for-resource"
+                  sh "make it-test"
                 }
               }
               }
