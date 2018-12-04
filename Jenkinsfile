@@ -27,8 +27,7 @@ stages {
       when { anyOf { branch 'master'; branch 'PR-*' } }
         steps {
             container('maven') {
-                // sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.bmw.$DOMAIN_NAME.com"
-                sh "echo sonar disabled"
+                sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME.com"
             }
         }
       }
