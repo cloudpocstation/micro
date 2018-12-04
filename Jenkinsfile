@@ -6,12 +6,11 @@ pipeline {
       ORG               = 'cloudpocstation'
       APP_NAME          = 'micro'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+      DOMAIN_NAME = 'tech-talk-ntt.com'
     }
-    stages {
-      stage('CI Build and push snapshot') {
-        when {
-          branch 'PR-*'
-        }
+stages {
+      stage('CI: Build') {
+      when { anyOf { branch 'master'; branch 'PR-*' } }
         environment {
           PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
           PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
@@ -21,28 +20,78 @@ pipeline {
           container('maven') {
             sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
             sh "mvn install"
-            sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
-            sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
-          }
-
-          dir ('./charts/preview') {
-           container('maven') {
-             sh "make preview"
-             sh "jx preview --app $APP_NAME --dir ../.."
-           }
           }
         }
       }
-      stage('Sonar Analysis') {
+      stage('CI: Analyse Code') {
+      when { anyOf { branch 'master'; branch 'PR-*' } }
         steps {
-          sh "echo running sonar"
+            container('maven') {
+                // sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.bmw.$DOMAIN_NAME.com"
+                sh "echo sonar disabled"
+            }
         }
       }
-      stage('Integration Tests') {
+      stage('CI: Push Snapshot') {
+            when { anyOf { branch 'master'; branch 'PR-*' } }
+               environment {
+                  PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
+               }
+              steps {
+                  container('maven') {
+                      sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
+                      sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
+                  }
+              }
+            }
+      stage('TEST: Create Preview Environment') {
+      when { anyOf { branch 'master'; branch 'PR-*' } }
+        environment {
+          PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
+          PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
+          HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
+        }
         steps {
-          sh "echo Running tests against the deployed application"
+        dir ('./charts/preview') {
+         container('maven') {
+           sh "make preview"
+           sh "jx preview --name=${ORG}-${APP_NAME}-${BRANCH_NAME} --verbose=true --log-level='debug' --app $APP_NAME --dir ../.."
+         }
+        }
         }
       }
+      stage('TEST: Smoke Tests') {
+      when { anyOf { branch 'master'; branch 'PR-*' } }
+        environment {
+          PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
+          PREVIEW_URL = "http://micro.bmw-cloudpocstation-${PREVIEW_NAMESPACE}.$DOMAIN_NAME.com"
+          RESOURCE_URL = "${PREVIEW_URL}/micro-sample/rs/monitoring/ping"
+        }
+        steps {
+        dir ('./test') {
+          container('maven') {
+            sh "make wait-for-resource"
+            sh "make test"
+          }
+        }
+        }
+      }
+      stage('TEST: Module and subsystem tests') {
+      when { anyOf { branch 'master'; branch 'PR-*' } }
+              environment {
+                PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
+                PREVIEW_URL = "http://micro.bmw-cloudpocstation-${PREVIEW_NAMESPACE}.$DOMAIN_NAME.com"
+                RESOURCE_URL = "${PREVIEW_URL}/micro-sample/rs/monitoring/ping"
+              }
+              steps {
+              dir ('./test') {
+                container('maven') {
+                  sh "make wait-for-resource"
+                  sh "make it-test"
+                }
+              }
+              }
+            }
       stage('Build Release') {
         when {
           branch 'master'
@@ -64,11 +113,7 @@ pipeline {
             }
           }
           container('maven') {
-            sh 'mvn clean deploy'
-
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
-
-
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
           }
         }
