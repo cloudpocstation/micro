@@ -64,7 +64,7 @@ stages {
       when { anyOf { branch 'master'; branch 'PR-*' } }
         environment {
           PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
-          PREVIEW_URL = "http://micro.techtalk-cloudpocstation-${PREVIEW_NAMESPACE}.$DOMAIN_NAME.com"
+          PREVIEW_URL = "http://micro.techtalk-cloudpocstation-${PREVIEW_NAMESPACE}.$DOMAIN_NAME"
           RESOURCE_URL = "${PREVIEW_URL}/micro-sample/rs/monitoring/ping"
         }
         steps {
@@ -80,7 +80,7 @@ stages {
       when { anyOf { branch 'master'; branch 'PR-*' } }
               environment {
                 PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
-                PREVIEW_URL = "http://micro.techtalk-cloudpocstation-${PREVIEW_NAMESPACE}.$DOMAIN_NAME.com"
+                PREVIEW_URL = "http://micro.techtalk-cloudpocstation-${PREVIEW_NAMESPACE}.$DOMAIN_NAME"
                 RESOURCE_URL = "${PREVIEW_URL}/micro-sample/rs/monitoring/ping"
               }
               steps {
