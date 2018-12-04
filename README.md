@@ -6,3 +6,4 @@
 * Show tagging
 * Show autopromotion environment 
 * Show manual promotion via gitops
+* Show anchore cve
