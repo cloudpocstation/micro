@@ -18,6 +18,7 @@ stages {
         }
         steps {
           container('maven') {
+            sh "jx version -b"
             sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
             sh "mvn install"
           }
