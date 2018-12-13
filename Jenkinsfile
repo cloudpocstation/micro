@@ -28,7 +28,7 @@ stages {
       when { anyOf { branch 'master'; branch 'PR-*' } }
         steps {
             container('maven') {
-                // sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME.com"
+                sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME"
             }
         }
       }
@@ -70,8 +70,8 @@ stages {
         steps {
         dir ('./test') {
           container('maven') {
-            // sh "make wait-for-resource"
-            // sh "make test"
+            sh "make wait-for-resource"
+            sh "make test"
           }
         }
         }
@@ -86,8 +86,8 @@ stages {
               steps {
               dir ('./test') {
                 container('maven') {
-                  // sh "make wait-for-resource"
-                  // sh "make it-test"
+                  sh "make wait-for-resource"
+                  sh "make it-test"
                 }
               }
               }
