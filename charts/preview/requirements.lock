@@ -1,14 +1,12 @@
-
 dependencies:
-- alias: expose
-  name: exposecontroller
+- name: exposecontroller
   repository: http://chartmuseum.jenkins-x.io
   version: 2.3.56
-- alias: cleanup
-  name: exposecontroller
+- name: exposecontroller
   repository: http://chartmuseum.jenkins-x.io
   version: 2.3.56
-- alias: preview
-  name: micro
+- name: micro
   repository: file://../micro
   version: 0.0.0-SNAPSHOT-master-36
+digest: sha256:3d72fc7b37471ce4372432cda06e7bbe62bdce4728a9ae24ef5ffe0321f73b23
+generated: 2018-12-13T13:21:53.547871791Z
