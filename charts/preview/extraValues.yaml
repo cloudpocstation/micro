@@ -1,0 +1,12 @@
+expose:
+  config:
+    domain: tech-talk-ntt.com
+    exposer: Ingress
+    http: "true"
+  Annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded
+preview:
+  image:
+    repository: 016973021151.dkr.ecr.us-east-1.amazonaws.com/cloudpocstation/micro
+    tag: 0.0.0-SNAPSHOT-master-37
