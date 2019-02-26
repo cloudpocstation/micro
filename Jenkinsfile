@@ -6,7 +6,7 @@ pipeline {
       ORG               = 'cloudpocstation'
       APP_NAME          = 'micro'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-      DOMAIN_NAME = 'tech-talk-ntt.com'
+      DOMAIN_NAME = 'cloudpocstation.cloud-poc-station.com'
     }
 stages {
       stage('CI: Build') {
@@ -28,7 +28,7 @@ stages {
       when { anyOf { branch 'master'; branch 'PR-*' } }
         steps {
             container('maven') {
-                sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME"
+                //sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.$DOMAIN_NAME"
             }
         }
       }
